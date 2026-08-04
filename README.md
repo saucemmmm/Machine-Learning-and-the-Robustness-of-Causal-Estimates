@@ -4,7 +4,7 @@ This repository contains the research report and computational work for **Machin
 
 The project uses double/debiased machine learning (DML) to revisit three influential studies in African political economy and development. The central question is whether published estimates remain stable when observed-covariate adjustment is made more flexible while the original research design, treatment, estimand, fixed effects, instrument, clustering, and inferential structure are preserved.
 
-Read the complete [research report](Research%20Report/Econ_MA.pdf) for the motivation, methodology, results, and references.
+Read the complete [research report](Machine-Learning-and-the-Robustness-of-Causal-Estimates/Econ_MA.pdf) for the motivation, methodology, results, and references.
 
 ## Project overview
 
