@@ -75,41 +75,6 @@ Re-estimates Weigel's Table IV intention-to-treat effects while respecting treat
 
 The original replication package identifies tax-authority name matching as confidential. This project does not reconstruct or expose those confidential records.
 
-## Supporting notebooks and scripts
-
-| File | Purpose |
-|---|---|
-| [Nunn_Wantchekon_Tables3_5_6_Python.ipynb](Nunn_Wantchekon_Tables3_5_6_Python.ipynb) | Python conversion and validation of the original Nunn-Wantchekon trust regressions for Tables 3, 5, and 6 |
-| [Econ_MA_Project_R.ipynb](Econ_MA_Project_R.ipynb) | Compact R workflow for the original Nunn-Wantchekon regressions |
-| [Econ_MA_Project.ipynb](Econ_MA_Project.ipynb) | Extended R replication with clustered covariance helpers and an initial lasso-DML robustness exercise |
-| `make_campante_dml_latex_tables.py` | Builds LaTeX tables from the Campante result artifacts |
-| `make_weigel_dml_latex_tables.py` | Builds LaTeX tables from the Weigel result artifacts |
-| `Research Report/` | Main LaTeX sources and the compiled research report |
-| `Reports/` | Study-specific result tables, visual reports, and supporting LaTeX sources |
-
-Checkpoint and result directories contain generated artifacts used to resume expensive runs and construct tables. They are not substitutes for the source notebooks.
-
-## Data and repository layout
-
-The analysis relies on replication material from the original studies. The notebooks expect the following structure beneath the repository root:
-
-```text
-Econ_MA_Project/
-├── NUNN_WANTCHEKON_AER_2011_REPLICATION_FILES/
-│   ├── Nunn_Wantchekon_AER_2011.dta
-│   ├── Trust_OLS_Tables1_3.do
-│   └── trust_IV_Tables5_6.do
-├── Papers/
-│   ├── Replication_package_Depetris-Chauvin/
-│   └── Replication_package_Weigel/
-├── Research Report/
-│   └── Econ_MA.pdf
-├── campante_dml_checkpoints/
-├── campante_dml_results/
-└── [analysis notebooks]
-```
-
-Obtain any replication data that are not distributed with this repository from the corresponding authors or official archives. The original papers, data, and replication packages remain subject to their own access conditions, licenses, and redistribution rules.
 
 ## Runtime requirements
 
@@ -129,38 +94,6 @@ The Nunn-Wantchekon DML notebooks and the Campante notebook are designed for a G
 
 Select a GPU runtime before executing their setup cells. The notebooks check CUDA availability and install missing RAPIDS packages in Colab when necessary. A runtime restart may be required after installation.
 
-### Weigel notebook
-
-The Weigel analysis is designed to run on a standard CPU runtime and uses NumPy, pandas, SciPy, scikit-learn, statsmodels, PyReadStat, and PyArrow. GPU hardware is optional.
-
-### R notebooks
-
-The supporting R workflows use `foreign`; the extended notebook also uses `MASS` and optionally `glmnet`.
-
-No single locked environment file is currently provided, so package versions recorded by notebook runtime manifests and saved outputs should be retained when reporting a reproduction.
-
-## Configuring project paths
-
-The primary notebooks use environment-variable overrides rather than personal absolute paths:
-
-| Notebook | Environment variable |
-|---|---|
-| Nunn-Wantchekon Table 3 and Table 6 | `ECON_MA_PROJECT_ROOT` |
-| Campante Table 2 and Table 4 | `CAMPANTE_PROJECT_ROOT` |
-| Weigel Table IV | `WEIGEL_PROJECT_ROOT` |
-
-For example, define the variables before running the relevant path cell:
-
-```python
-import os
-
-repository = "/path/to/Econ_MA_Project"
-os.environ["ECON_MA_PROJECT_ROOT"] = repository
-os.environ["CAMPANTE_PROJECT_ROOT"] = repository
-os.environ["WEIGEL_PROJECT_ROOT"] = repository
-```
-
-In Colab, mount Google Drive first and set `repository` to the folder containing this project. If no override is supplied, the notebooks use the current working directory.
 
 ## Reproducing the analysis
 
@@ -174,24 +107,3 @@ In Colab, mount Google Drive first and set `repository` to the folder containing
 8. Use full-run settings for reported results. Smoke-test settings verify code flow only and should not be interpreted as final estimates.
 
 Full runs are computationally expensive. The Nunn and Campante analyses use repeated cross-fitting across several learner families, while the Weigel final inference refits nuisance models across 5,000 randomization draws.
-
-## Generated artifacts and GitHub limits
-
-Checkpoint files, cached predictions, `.rds` objects, and rendered tables can be large. In particular, `dml_table3_all_results.rds` exceeds GitHub's standard 100 MB per-file limit. Before publishing or cloning the full artifact history, either:
-
-- keep generated checkpoints and caches outside version control;
-- publish them as release assets; or
-- track required large artifacts with Git LFS.
-
-The notebooks, compact result tables, and report sources should remain the canonical reproducible materials.
-
-## References
-
-- Chernozhukov, V., Chetverikov, D., Demirer, M., Duflo, E., Hansen, C., Newey, W., and Robins, J. (2018). [Double/debiased machine learning for treatment and structural parameters](https://doi.org/10.1111/ectj.12097).
-- Depetris-Chauvin, E., Durante, R., and Campante, F. (2020). [Building Nations through Shared Experiences: Evidence from African Football](https://doi.org/10.1257/aer.20180805).
-- Nunn, N., and Wantchekon, L. (2011). [The Slave Trade and the Origins of Mistrust in Africa](https://doi.org/10.1257/aer.101.7.3221).
-- Weigel, J. L. (2020). [The Participation Dividend of Taxation](https://doi.org/10.1093/qje/qjaa019).
-
-## Licensing and attribution
-
-No project-level software license is currently included. Add a `LICENSE` file before inviting reuse or contributions. The underlying articles, data, and replication packages remain the property of their authors and publishers and should be cited and redistributed only under their applicable terms.
