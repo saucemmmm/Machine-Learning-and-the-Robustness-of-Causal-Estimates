@@ -2,13 +2,13 @@
 
 This repository contains the research report and computational work for **Machine Learning and the Robustness of Causal Estimates: Evidence from Re-Estimated Studies in African Development**.
 
-The project uses double/debiased machine learning (DML) to revisit three influential studies in African political economy and development. The central question is whether published estimates remain stable when observed-covariate adjustment is made more flexible while the original research design, treatment, estimand, fixed effects, instrument, clustering, and inferential structure are preserved.
+The project uses double/debiased machine learning (DML) to revisit three influential studies in African political economy and development. The central question is whether published estimates remain robust after flexible, high-dimensional adjustment for observed variables.
 
-Read the complete [research report](Econ_MA.pdf) for the motivation, methodology, results, and references.
+Read the complete [research report](ECON_MA.pdf) for the motivation, methodology, results, and references.
 
 ## Project overview
 
-DML combines cross-fitting with orthogonal estimating equations. Machine-learning models estimate nuisance functions such as conditional outcomes, treatments, and instruments on training folds; treatment effects are then estimated from held-out observations. This limits overfitting and first-order regularization bias without treating prediction as a substitute for research design.
+DML combines cross-fitting with orthogonal estimating equations. Machine-learning models estimate nuisance functions such as conditional outcomes, treatments, and instruments on training folds; treatment effects are then identified on held-out folds with reduced regularization bias.
 
 The project applies this framework to three settings:
 
@@ -18,16 +18,16 @@ The project applies this framework to three settings:
 | Depetris-Chauvin, Durante, and Campante (2020) | Event timing around national-team football matches | Fixed-effect-residualized partially linear DML for the principal Table 2 and Table 4 outcomes |
 | Weigel (2020) | Neighborhood-level randomized property-tax campaign | Design-aware AIPW/DML-IRM and PLR-DML with neighborhood folds and randomization inference |
 
-Across the notebooks, nuisance learners include lasso, elastic net, boosting, single trees, random forests, neural networks, and ensembles. Learners are compared using out-of-fold nuisance performance and design-relevant diagnostics, not the sign or statistical significance of the treatment estimate.
+Across the notebooks, nuisance learners include lasso, elastic net, boosting, single trees, random forests, neural networks, and ensembles. Learners are compared using out-of-fold nuisance performance metrics.
 
 ## Main findings
 
-- **Slave-trade exposure and trust:** The partially linear Table 3 estimates preserve the negative association between ancestral slave-trade exposure and present-day trust under stable regularized, ensemble, conservative, and ethnicity-cluster specifications. Exact magnitudes remain sensitive to learner and fold construction.
-- **Slave-trade instrumental variables:** The principal lasso and ensemble DML-IV estimates support the published direction, but ethnicity-cluster and conservative specifications reveal weak residualized first stages and unstable score denominators. The IV evidence is therefore more fragile than the partially linear results.
-- **Football victories and national identity:** The fixed-effect-residualized DML estimates remain close to the published and replicated fixed-effect estimates. This supports robustness to nonlinear adjustment for the observed controls but does not validate the event-timing assumptions themselves.
-- **Taxation and participation:** Both design-aware DML routes broadly preserve the positive participation response to the randomized tax campaign. Evidence is strongest for town hall attendance, composite outcomes, the participation index, and cost measures; evaluation submission weakens after flexible adjustment and multiple-testing correction.
+- **Slave-trade exposure and trust:** The partially linear Table 3 estimates preserve the negative association between ancestral slave-trade exposure and present-day trust under stable regularized learner choices and clustered inference.
+- **Slave-trade instrumental variables:** The principal lasso and ensemble DML-IV estimates support the published direction, but ethnicity-cluster and conservative specifications reveal weak residualized first-stage support in some outcomes.
+- **Football victories and national identity:** The fixed-effect-residualized DML estimates remain close to the published and replicated fixed-effect estimates. This supports robustness to nonlinear confounding in observed covariates.
+- **Taxation and participation:** Both design-aware DML routes broadly preserve the positive participation response to the randomized tax campaign. Evidence is strongest for town hall attendance, with mixed precision for broader meeting participation.
 
-These exercises evaluate robustness to flexible adjustment for observed variables. They do not remove unobserved confounding, validate an exclusion restriction, prove that event timing is exogenous, or replace random assignment and design-consistent inference.
+These exercises evaluate robustness to flexible adjustment for observed variables. They do not remove unobserved confounding, validate an exclusion restriction, prove that event timing is exogenous, or replace design-specific assumptions.
 
 ## Primary analysis notebooks
 
@@ -45,7 +45,7 @@ Re-estimates the five trust outcomes from Nunn and Wantchekon's Table 3 using a 
 
 ### [DML_Table6_IV_Nunn_Wantchekon_Python.ipynb](DML_Table6_IV_Nunn_Wantchekon_Python.ipynb)
 
-Extends the Nunn-Wantchekon analysis to the Table 6 instrumental-variables design. Slave-trade exposure, `ln_export_area`, is instrumented with distance from the coast, `distsea`. The notebook separately residualizes the outcome, endogenous treatment, and instrument and reports:
+Extends the Nunn-Wantchekon analysis to the Table 6 instrumental-variables design. Slave-trade exposure, `ln_export_area`, is instrumented with distance from the coast, `distsea`. The notebook separates:
 
 - a linear IV benchmark validation;
 - repeated cross-fitted DML-IV estimates;
@@ -56,7 +56,7 @@ Extends the Nunn-Wantchekon analysis to the Table 6 instrumental-variables desig
 
 ### [DML_Campante_BuildingNations_Table2_Table4_Python.ipynb](DML_Campante_BuildingNations_Table2_Table4_Python.ipynb)
 
-Re-estimates the main individual-level findings from Depetris-Chauvin, Durante, and Campante. It first uses alternating projections to remove the original country-match, language-year, and calendar fixed effects, then applies repeated PLR-DML to the residualized variables. The notebook contains baseline replication, fixed-effect convergence checks, country-year clustered inference, learner comparisons, multiple-testing diagnostics, and singleton-sample sensitivity.
+Re-estimates the main individual-level findings from Depetris-Chauvin, Durante, and Campante. It first uses alternating projections to remove the original country-match, language-year, and calendar controls from outcomes, treatment, and covariates. DML is then estimated on the residualized variables, preserving the original fixed-effect structure while allowing nonlinear nuisance adjustment.
 
 ### [DML_Weigel_ParticipationDividend_TableIV_Python.ipynb](DML_Weigel_ParticipationDividend_TableIV_Python.ipynb)
 
@@ -109,7 +109,7 @@ Econ_MA_Project/
 └── [analysis notebooks]
 ```
 
-Obtain any replication data that are not distributed with this repository from the corresponding authors or official archives. The original papers, data, and replication packages remain subject to their own access conditions, licenses, and redistribution rules.
+Obtain any replication data that are not distributed with this repository from the corresponding authors or official archives. The original papers, data, and replication packages remain subject to their own licenses and terms.
 
 ## Runtime requirements
 
@@ -173,11 +173,11 @@ In Colab, mount Google Drive first and set `repository` to the folder containing
 7. Run outcome cells individually. Completed outcome-level checkpoints allow interrupted sessions to resume without rerunning every model.
 8. Use full-run settings for reported results. Smoke-test settings verify code flow only and should not be interpreted as final estimates.
 
-Full runs are computationally expensive. The Nunn and Campante analyses use repeated cross-fitting across several learner families, while the Weigel final inference refits nuisance models across 5,000 randomization draws.
+Full runs are computationally expensive. The Nunn and Campante analyses use repeated cross-fitting across several learner families, while the Weigel final inference refits nuisance models across many randomization draws.
 
 ## Generated artifacts and GitHub limits
 
-Checkpoint files, cached predictions, `.rds` objects, and rendered tables can be large. In particular, `dml_table3_all_results.rds` exceeds GitHub's standard 100 MB per-file limit. Before publishing or cloning the full artifact history, either:
+Checkpoint files, cached predictions, `.rds` objects, and rendered tables can be large. In particular, `dml_table3_all_results.rds` exceeds GitHub's standard 100 MB per-file limit. Before publishing generated outputs, either:
 
 - keep generated checkpoints and caches outside version control;
 - publish them as release assets; or
@@ -194,4 +194,4 @@ The notebooks, compact result tables, and report sources should remain the canon
 
 ## Licensing and attribution
 
-No project-level software license is currently included. Add a `LICENSE` file before inviting reuse or contributions. The underlying articles, data, and replication packages remain the property of their authors and publishers and should be cited and redistributed only under their applicable terms.
+No project-level software license is currently included. Add a `LICENSE` file before inviting reuse or contributions. The underlying articles, data, and replication packages remain the property of their respective authors and distributors.
